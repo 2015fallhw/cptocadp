@@ -13,6 +13,8 @@
 <v t="amd.20151121225042.1" a="E"><vh>@settings</vh>
 <v t="amd.20151121225042.2"><vh>@data qt-gui-plugin-style-sheet</vh></v>
 <v t="amd.20151121225042.3"><vh>@string initial_split_orientation = horizontal</vh></v>
+<v t="amd.20151121233734.1"><vh>@edit README.md</vh></v>
+<v t="amd.20151121233918.1"><vh>@edit setup.py</vh></v>
 </v>
 <v t="amd.20151121225024.2" a="E"><vh>@clean wsgi.py</vh>
 <v t="amd.20151121225723.1"><vh>&lt;&lt; declarations &gt;&gt;</vh></v>
