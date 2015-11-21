@@ -14,13 +14,14 @@
 <v t="amd.20151121225042.2"><vh>@data qt-gui-plugin-style-sheet</vh></v>
 <v t="amd.20151121225042.3"><vh>@string initial_split_orientation = horizontal</vh></v>
 </v>
-<v t="amd.20151121234937.1" a="E"><vh>有關專案</vh>
+<v t="amd.20151121234937.1"><vh>有關專案</vh>
 <v t="amd.20151121234947.1"><vh>OpenShift 與 filezilla</vh></v>
 <v t="amd.20151121235037.1"><vh>對應的 OpenShift</vh></v>
 </v>
 <v t="amd.20151121233734.1"><vh>@edit README.md</vh></v>
 <v t="amd.20151121233918.1"><vh>@edit setup.py</vh></v>
-<v t="amd.20151121225024.2" a="E"><vh>@clean wsgi.py</vh>
+<v t="amd.20151122065955.1"><vh>@edit wsgi.py</vh></v>
+<v t="amd.20151121225024.2"><vh>@clean guess.py</vh>
 <v t="amd.20151121225723.1"><vh>&lt;&lt; declarations &gt;&gt;</vh></v>
 <v t="amd.20151121225321.1"><vh>index</vh></v>
 <v t="amd.20151121225340.1"><vh>guessform</vh></v>
@@ -64,13 +65,6 @@ app.secret_key = 'A0Zr9@8j/3yX R~XHH!jmN]LWX/,?R@T'
 # 以下為相關各方法的定義 ########################### (3)
 @others
 
-# 以下開始判斷在 OpenShift 或近端執行 ################### (4)
-if 'OPENSHIFT_REPO_DIR' in os.environ.keys():
-    # 表示程式在雲端執行
-    application = app
-else:
-    # 表示在近端執行
-    app.run(debug=True)
 
 </t>
 <t tx="amd.20151121225042.1"></t>
