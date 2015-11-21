@@ -1,9 +1,7 @@
 # 以下為宣告 ################################## (1)
-#!/usr/bin/python
 # 導入 os 模組, 主要用來判斷是否在 OpenShift 上執行
 import os
-from flask import Flask, request, redirect, \
-                render_template, session
+from flask import Flask, request, redirect, render_template, session
 import random
 
 # 以下為全域變數宣告 ############################# (2)

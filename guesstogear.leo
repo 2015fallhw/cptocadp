@@ -10,12 +10,16 @@
 <preferences/>
 <find_panel_settings/>
 <vnodes>
-<v t="amd.20151121225042.1" a="E"><vh>@settings</vh>
+<v t="amd.20151121225042.1"><vh>@settings</vh>
 <v t="amd.20151121225042.2"><vh>@data qt-gui-plugin-style-sheet</vh></v>
 <v t="amd.20151121225042.3"><vh>@string initial_split_orientation = horizontal</vh></v>
+</v>
+<v t="amd.20151121234937.1" a="E"><vh>有關專案</vh>
+<v t="amd.20151121234947.1"><vh>OpenShift 與 filezilla</vh></v>
+<v t="amd.20151121235037.1"><vh>對應的 OpenShift</vh></v>
+</v>
 <v t="amd.20151121233734.1"><vh>@edit README.md</vh></v>
 <v t="amd.20151121233918.1"><vh>@edit setup.py</vh></v>
-</v>
 <v t="amd.20151121225024.2" a="E"><vh>@clean wsgi.py</vh>
 <v t="amd.20151121225723.1"><vh>&lt;&lt; declarations &gt;&gt;</vh></v>
 <v t="amd.20151121225321.1"><vh>index</vh></v>
@@ -217,12 +221,13 @@ def guessform():
     
     return render_template("guessform.html", guess=guess, answer=theanswer, count=count)</t>
 <t tx="amd.20151121225346.1"></t>
-<t tx="amd.20151121225723.1">#!/usr/bin/python
-# 導入 os 模組, 主要用來判斷是否在 OpenShift 上執行
+<t tx="amd.20151121225723.1"># 導入 os 模組, 主要用來判斷是否在 OpenShift 上執行
 import os
-from flask import Flask, request, redirect, \
-                render_template, session
+from flask import Flask, request, redirect, render_template, session
 import random
 </t>
+<t tx="amd.20151121234937.1"></t>
+<t tx="amd.20151121234947.1">ssh-add ~/.ssh/id_rsa</t>
+<t tx="amd.20151121235037.1">ssh://56508f8689f5cf0897000188@cptocadp-2015fallhw.rhcloud.com/~/git/cptocadp.git/</t>
 </tnodes>
 </leo_file>
