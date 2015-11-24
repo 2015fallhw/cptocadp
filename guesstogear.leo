@@ -18,9 +18,10 @@
 <v t="amd.20151121234947.1"><vh>OpenShift 與 filezilla</vh></v>
 <v t="amd.20151121235037.1"><vh>對應的 OpenShift</vh></v>
 <v t="amd.20151122072557.1"><vh>flask socket.io.js 與 OpenShift</vh></v>
-<v t="amd.20151122100250.1"><vh>Brython 繪圖</vh>
+<v t="amd.20151122100250.1" a="E"><vh>Brython 繪圖</vh>
 <v t="amd.20151122100546.1"><vh>畫五芒星</vh></v>
 <v t="amd.20151122100400.1"><vh>台灣國旗</vh></v>
+<v t="amd.20151124205805.1"><vh>Gear Utility</vh></v>
 </v>
 <v t="amd.20151122093651.1"><vh>Pro/Web.Link 程式範例</vh>
 <v t="amd.20151122094302.1"><vh>正齒輪繪圖設計參數</vh>
@@ -28,7 +29,7 @@
 <v t="amd.20151122094302.3"><vh>四連桿自動組立</vh></v>
 </v>
 <v t="amd.20151122094542.1"><vh>newHeadline</vh></v>
-<v t="amd.20151122094546.1"><vh>@@clean gear.py</vh>
+<v t="amd.20151122094546.1" a="E"><vh>@@clean gear.py</vh>
 <v t="amd.20151122094546.2"><vh>&lt;&lt;declarations&gt;&gt; (application)</vh></v>
 <v t="amd.20151122094546.3" a="E"><vh>class Gear</vh>
 <v t="amd.20151122094546.4"><vh>__init__</vh></v>
@@ -68,6 +69,8 @@
 <v t="amd.20151122095724.1"><vh>STL 零件檔轉換</vh>
 <v t="amd.20151122095840.1"><vh>建立 Binary STL</vh></v>
 </v>
+<v t="amd.20151122102956.1"><vh>網際機構模擬</vh></v>
+<v t="amd.20151122214658.1"><vh>Gitlab on Ubuntu</vh></v>
 </v>
 <v t="amd.20151122075148.1"><vh>建立資料庫指令</vh></v>
 <v t="amd.20151122075205.1"><vh>@edit schema.sql</vh></v>
@@ -81,10 +84,14 @@
 <v t="amd.20151121225321.1"><vh>index</vh></v>
 <v t="amd.20151121225340.1"><vh>guessform</vh></v>
 <v t="amd.20151121225334.1"><vh>docheck</vh></v>
+<v t="amd.20151124172242.1"><vh>drawflag</vh></v>
+<v t="amd.20151124205123.1"><vh>drawstar</vh></v>
+<v t="amd.20151124210158.1"><vh>drawcango</vh></v>
+<v t="amd.20151124215720.1"><vh>drag</vh></v>
 </v>
-<v t="amd.20151122075345.1" a="E"><vh>@clean gear.py</vh>
+<v t="amd.20151122075345.1"><vh>@clean gear.py</vh>
 <v t="amd.20151122075345.2"><vh>&lt;&lt;declarations&gt;&gt; (application)</vh></v>
-<v t="amd.20151122075345.3" a="E"><vh>class Gear</vh>
+<v t="amd.20151122075345.3"><vh>class Gear</vh>
 <v t="amd.20151122075345.4"><vh>__init__</vh></v>
 <v t="amd.20151122075345.6"><vh>index</vh></v>
 <v t="amd.20151122075345.7"><vh>interpolation</vh></v>
@@ -3257,6 +3264,725 @@ star(100, 100, 30, 0, True, "#f00")
 for i in range(5):
     for j in range(5):
         star(200+65*i, 200+65*j, 30, 0, False, "#000")
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+'''
+    return outstring</t>
+<t tx="amd.20151122102956.1">http://threejs.org/</t>
+<t tx="amd.20151122214658.1">http://blog.bobbyallen.me/2014/01/11/setup-your-own-private-github-server-using-gitlab-and-ubuntu-server-12-04-lts/
+
+https://www.linux.com/learn/tutorials/824358-how-to-run-your-own-git-server</t>
+<t tx="amd.20151124172242.1"># http://2014c2-mdenfu.rhcloud.com/c2g30/flag
+# 直接送出 html 版本
+@app.route("/drawflag")
+def drawflag():
+    '''
+    原始程式來源: http://blog.roodo.com/esabear/archives/19215194.html
+    改寫為 Brython 程式
+    '''
+    outstring = '''
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
+&lt;script type="text/javascript" src="/static/Brython3.2.3-20151122-082712/brython.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body onload="brython({debug:1, cache:'version'})"&gt;
+&lt;canvas id="plotarea" width="300" height="200"&gt;&lt;/canvas&gt;
+&lt;script type="text/python"&gt;
+# 導入 doc
+from browser import document as doc
+import math
+
+# 準備繪圖畫布
+canvas = doc["plotarea"]
+ctx = canvas.getContext("2d")
+# 進行座標轉換, x 軸不變, y 軸反向且移動 canvas.height 單位光點
+# ctx.setTransform(1, 0, 0, -1, 0, canvas.height)
+# 以下採用 canvas 原始座標繪圖
+flag_w = canvas.width
+flag_h = canvas.height
+circle_x = flag_w/4
+circle_y = flag_h/4
+# 先畫滿地紅
+ctx.fillStyle='rgb(255, 0, 0)'
+ctx.fillRect(0,0,flag_w,flag_h)
+# 再畫青天
+ctx.fillStyle='rgb(0, 0, 150)'
+ctx.fillRect(0,0,flag_w/2,flag_h/2)
+# 畫十二道光芒白日
+ctx.beginPath()
+star_radius = flag_w/8
+angle = 0
+for i in range(24):
+    angle += 5*math.pi*2/12
+    toX = circle_x + math.cos(angle)*star_radius
+    toY = circle_y + math.sin(angle)*star_radius
+    # 只有 i 為 0 時移動到 toX, toY, 其餘都進行 lineTo
+    if (i):
+        ctx.lineTo(toX, toY)
+    else:
+        ctx.moveTo(toX, toY)
+ctx.closePath()
+# 將填色設為白色
+ctx.fillStyle = '#fff'
+ctx.fill()
+# 白日:藍圈
+ctx.beginPath()
+ctx.arc(circle_x, circle_y, flag_w*17/240, 0, math.pi*2, True)
+ctx.closePath()
+# 填色設為藍色
+ctx.fillStyle = 'rgb(0, 0, 149)'
+ctx.fill()
+# 白日:白心
+ctx.beginPath()
+ctx.arc(circle_x, circle_y, flag_w/16, 0, math.pi*2, True)
+ctx.closePath()
+# 填色設為白色
+ctx.fillStyle = '#fff'
+ctx.fill()
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+'''
+    return outstring</t>
+<t tx="amd.20151124205123.1"># 直接送出 html 版本
+@app.route("/drawstar")
+def drawstar():
+    outstring = '''
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
+&lt;script type="text/javascript" src="/static/Brython3.2.3-20151122-082712/brython.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body onload="brython({debug:1, cache:'version'})"&gt;
+&lt;canvas id="plotarea" width="800" height="800"&gt;&lt;/canvas&gt;
+&lt;script type="text/python"&gt;
+# 導入 doc
+from browser import document as doc
+import math
+
+# 準備繪圖畫布
+canvas = doc["plotarea"]
+ctx = canvas.getContext("2d")
+# 進行座標轉換, x 軸不變, y 軸反向且移動 800 光點
+ctx.setTransform(1, 0, 0, -1, 0, 800)
+
+# 定義畫線函式
+def draw_line(x1, y1, x2, y2, linethick = 3, color = "black"):
+    ctx.beginPath()
+    ctx.lineWidth = linethick
+    ctx.moveTo(x1, y1)
+    ctx.lineTo(x2, y2)
+    ctx.strokeStyle = color
+    ctx.stroke()
+
+# x, y 為中心,  r 為半徑, angle 旋轉角,  solid 空心或實心,  color 顏色
+def star(x, y, r, angle=0, solid=False, color="#f00"):
+    # 以 x, y 為圓心, 計算五個外點
+    deg = math.pi/180
+    # 圓心到水平線距離
+    a = r*math.cos(72*deg)
+    # a 頂點向右到內點距離
+    b = (r*math.cos(72*deg)/math.cos(36*deg))*math.sin(36*deg)
+    # 利用畢氏定理求內點半徑
+    rin = math.sqrt(a**2 + b**2)
+    # 查驗 a, b 與 rin
+    #print(a, b, rin)
+    if(solid):
+        ctx.beginPath()
+    for i in range(5):
+        xout = (x + r*math.sin((360/5)*deg*i+angle*deg))
+        yout = (y + r*math.cos((360/5)*deg*i+angle*deg))
+        # 外點增量 + 1
+        xout2 = x + r*math.sin((360/5)*deg*(i+1)+angle*deg)
+        yout2 = y + r*math.cos((360/5)*deg*(i+1)+angle*deg)
+        xin = x + rin*math.sin((360/5)*deg*i+36*deg+angle*deg)
+        yin = y + rin*math.cos((360/5)*deg*i+36*deg+angle*deg)
+        # 查驗外點與內點座標
+        #print(xout, yout, xin, yin)
+        if(solid):
+            # 填色
+            if(i==0):
+                ctx.moveTo(xout, yout)
+                ctx.lineTo(xin, yin)
+                ctx.lineTo(xout2, yout2)
+            else:
+                ctx.lineTo(xin, yin)
+                ctx.lineTo(xout2, yout2)
+        else:
+            # 空心
+            draw_line(xout, yout, xin, yin, color)
+            # 畫空心五芒星, 無關畫線次序, 若實心則與畫線次序有關
+            draw_line(xout2, yout2, xin, yin, color)
+    if(solid):
+        ctx.fillStyle = color
+        ctx.fill()
+star(600, 600, 100, 30, True, "#00f")
+star(100, 100, 30, 0, True, "#f00")
+#star(300, 300, 50, 0, False, "#000")
+for i in range(5):
+    for j in range(5):
+        star(200+65*i, 200+65*j, 30, 0, False, "#000")
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+'''
+    return outstring
+</t>
+<t tx="amd.20151124205805.1">/*==========================================================================*
+  Filename: gearUtils-05.js
+  By: Dr A.R.Collins
+
+  JavaScript involute gear drawing utilities.
+  Requires:
+  'involuteBezCoeffs' can stand alone,
+  'createGearTooth' and 'createIntGearTooth' generate draw commands for use
+  in Cango graphics library but may be simply converted for use in SVG.
+
+  Kindly give credit to Dr A.R.Collins &lt;http://www.arc.id.au/&gt;
+  Report bugs to tony at arc.id.au
+
+  Date   |Description                                                   |By
+  --------------------------------------------------------------------------
+  20Feb13 First public release                                           ARC
+  21Feb13 Clarified variable names of start and end parameters           ARC
+  06Mar13 Fixed Rf and filletAngle calculations                          ARC
+  25Jun13 Code tidy for JSLint, use strict                               ARC
+  16Mar15 Convert sweep direction of "A" commands for RHC coordinates    ARC
+  
+  source: http://www.arc.id.au/gearUtils-05.js
+ *==========================================================================*/
+
+  // exposed globals
+  var involuteBezCoeffs, createGearTooth, createIntGearTooth;
+
+(function()
+{
+  "use strict";
+  /* ----------------------------------------------------------
+   * involuteBezCoeffs
+   *
+   * JavaScript calculation of Bezier coefficients for
+   * Higuchi et al. approximation to an involute.
+   * ref: YNU Digital Eng Lab Memorandum 05-1
+   *
+   * Parameters:
+   * module - sets the size of teeth (see gear design texts)
+   * numTeeth - number of teeth on the gear
+   * pressure angle - angle in degrees, usually 14.5 or 20
+   * order - the order of the Bezier curve to be fitted [3, 4, 5, ..]
+   * fstart - fraction of distance along tooth profile to start
+   * fstop - fraction of distance along profile to stop
+   *-----------------------------------------------------------*/
+  involuteBezCoeffs = function(module, numTeeth, pressureAngle, order, fstart, fstop)
+  {
+    var PI = Math.PI,
+        Rpitch = module*numTeeth/2,       // pitch circle radius
+        phi = pressureAngle || 20,        // pressure angle
+        Rb = Rpitch*Math.cos(phi*PI/180), // base circle radius
+        Ra = Rpitch+module,               // addendum radius (outer radius)
+        p = order || 3,                   // order of Bezier approximation
+        ta = Math.sqrt(Ra*Ra-Rb*Rb)/Rb,   // involute angle at addendum
+        stop = fstop || 1,
+        start = 0.01,
+        te, ts,
+        bzCoeffs = [],
+        i, bcoeff;
+
+    function chebyExpnCoeffs(j, func)
+    {
+      var N = 50,      // a suitably large number  N&gt;&gt;p
+          c = 0,
+          k;
+
+      for (k=1; k&lt;=N; k++)
+      {
+        c += func(Math.cos(PI*(k-0.5)/N)) * Math.cos(PI*j*(k-0.5)/N);
+      }
+      return 2*c/N;
+    }
+
+    function chebyPolyCoeffs(p, func)
+    {
+      var coeffs = [],
+          fnCoeff = [],
+          T = [[], []],
+          i, j, k, pwr;
+
+      // populate 1st 2 rows of T
+      for (i=0; i&lt;p+1; i++)
+      {
+        T[0][i] = 0;
+        T[1][i] = 0;
+      }
+      T[0][0] = 1;
+      T[1][1] = 1;
+      /* now generate the Chebyshev polynomial coefficient using
+         formula T(k+1) = 2xT(k) - T(k-1) which yields
+      T = [ [ 1,  0,  0,  0,  0,  0],    // T0(x) =  +1
+            [ 0,  1,  0,  0,  0,  0],    // T1(x) =   0  +x
+            [-1,  0,  2,  0,  0,  0],    // T2(x) =  -1  0  +2xx
+            [ 0, -3,  0,  4,  0,  0],    // T3(x) =   0 -3x    0   +4xxx
+            [ 1,  0, -8,  0,  8,  0],    // T4(x) =  +1  0  -8xx       0  +8xxxx
+            [ 0,  5,  0,-20,  0, 16],    // T5(x) =   0  5x    0  -20xxx       0  +16xxxxx
+            ...                     ];
+      */
+      for (k=1; k&lt;p+1; k++)
+      {
+        T[k+1] = [0];
+        for (j=0; j&lt;T[k].length-1; j++)
+        {
+          T[k+1][j+1] = 2*T[k][j];
+        }
+        for (j=0; j&lt;T[k-1].length; j++)
+        {
+          T[k+1][j] -= T[k-1][j];
+        }
+      }
+      // convert the chebyshev function series into a simple polynomial
+      // and collect like terms, out T polynomial coefficients
+      for (k=0; k&lt;=p; k++)
+      {
+        fnCoeff[k] = chebyExpnCoeffs(k, func);
+        coeffs[k] = 0;
+      }
+      for (k=0; k&lt;=p; k++)
+      {
+        for (pwr=0; pwr&lt;=p; pwr++)    // loop thru powers of x
+        {
+          coeffs[pwr] += fnCoeff[k]*T[k][pwr];
+        }
+      }
+      coeffs[0] -= chebyExpnCoeffs(0, func)/2;  // fix the 0th coeff
+
+      return coeffs;
+    }
+
+    // Equation of involute using the Bezier parameter t as variable
+    function involuteXbez(t)
+    {
+      // map t (0 &lt;= t &lt;= 1) onto x (where -1 &lt;= x &lt;= 1)
+      var x = t*2-1;
+      //map theta (where ts &lt;= theta &lt;= te) from x (-1 &lt;=x &lt;= 1)
+      var theta = x*(te-ts)/2 + (ts + te)/2;
+      return Rb*(Math.cos(theta)+theta*Math.sin(theta));
+    }
+
+    function involuteYbez(t)
+    {
+          // map t (0 &lt;= t &lt;= 1) onto x (where -1 &lt;= x &lt;= 1)
+      var x = t*2-1,
+          //map theta (where ts &lt;= theta &lt;= te) from x (-1 &lt;=x &lt;= 1)
+          theta = x*(te-ts)/2 + (ts + te)/2;
+
+      return Rb*(Math.sin(theta)-theta*Math.cos(theta));
+    }
+
+    function binom(n, k)
+    {
+      var coeff = 1,
+          i;
+
+      for (i = n-k+1; i &lt;= n; i++)
+      {
+        coeff *= i;
+      }
+      for (i = 1; i &lt;= k; i++)
+      {
+        coeff /= i;
+      }
+
+      return coeff;
+    }
+
+    function bezCoeff(i, func)
+    {
+      // generate the polynomial coeffs in one go
+      var polyCoeffs = chebyPolyCoeffs(p, func),
+          bc, j;
+
+      for (bc=0, j=0; j&lt;=i; j++)
+      {
+        bc += binom(i,j)*polyCoeffs[j]/binom(p,j);
+      }
+      return bc;
+    }
+
+    if ((fstart !== undefined)&amp;&amp;(fstart&lt;stop))
+    {
+      start = fstart;
+    }
+    te = Math.sqrt(stop)*ta;          // involute angle, theta, at end of approx
+    ts = Math.sqrt(start)*ta;         // involute angle, theta, at start of approx
+    // calc Bezier coeffs
+    for (i=0; i&lt;=p; i++)
+    {
+      bcoeff = {};
+      bcoeff.x = bezCoeff(i, involuteXbez);
+      bcoeff.y = bezCoeff(i, involuteYbez);
+      bzCoeffs.push(bcoeff);
+    }
+
+    return bzCoeffs;
+  };
+
+  function rotate(pt, rads)  // rotate pt by rads radians about origin
+  {
+    var sinA = Math.sin(rads),
+        cosA = Math.cos(rads);
+
+    return {x: pt.x*cosA - pt.y*sinA,
+            y: pt.x*sinA + pt.y*cosA};
+  }
+
+  function toCartesian(radius, angle)   // convert polar coords to cartesian
+  {
+    return {x: radius*Math.cos(angle),
+            y: radius*Math.sin(angle)};
+  }
+
+  function genInvolutePolar(Rb, R)  // Rb = base circle radius
+  {
+    // returns the involute angle as function of radius R.
+    return (Math.sqrt(R*R - Rb*Rb)/Rb) - Math.acos(Rb/R);
+  }
+
+  /*----------------------------------------------------------
+    createGearTooth
+    Create an array of drawing commands and their coordinates
+    to draw a single spur gear tooth based on a circle
+    involute using the metric gear standards.
+
+    Requires Cango graphics library Rev 2.08 or later
+   ----------------------------------------------------------*/
+  createGearTooth = function(module, teeth, pressureAngle)
+  {
+    // ****** external gear specifications
+    var m = module,                                     // Module = mm of pitch diameter per tooth
+        Z = teeth,                                      // Number of teeth
+        phi = pressureAngle || 20,                      // pressure angle (degrees)
+        addendum = m,                                   // distance from pitch circle to tip circle
+        dedendum = 1.25*m,                              // pitch circle to root, sets clearance
+        clearance = dedendum - addendum,
+        // Calculate radii
+        Rpitch = Z*m/2,                                 // pitch circle radius
+        Rb = Rpitch*Math.cos(phi*Math.PI/180),          // base circle radius
+        Ra = Rpitch + addendum,                         // tip (addendum) circle radius
+        Rroot = Rpitch - dedendum,                      // root circle radius
+        fRad = 1.5*clearance,                           // fillet radius, max 1.5*clearance
+        Rf,                                             // radius at top of fillet
+        // ****** calculate angles (all in radians)
+        pitchAngle = 2*Math.PI/Z,                       // angle subtended by whole tooth (rads)
+        baseToPitchAngle = genInvolutePolar(Rb, Rpitch),
+        pitchToFilletAngle = baseToPitchAngle,          // profile starts at base circle
+        filletAngle = Math.atan(fRad/(fRad+Rroot)),     // radians
+        fe, fs, fm,
+        dedBz, addBz, inv, invR,
+        fillet, filletR, filletNext,
+        rootR, rootNext,
+        pt, i, data;
+
+    Rf = Math.sqrt((Rroot+fRad)*(Rroot+fRad)-(fRad*fRad)); // radius at top of fillet
+    if (Rb &lt; Rf)
+    {
+      Rf = Rroot+clearance;
+    }
+    if (Rf &gt; Rb)                   // start profile at top of fillet (if its greater)
+    {
+      pitchToFilletAngle -= genInvolutePolar(Rb, Rf);
+    }
+    // ****** generate Higuchi involute approximation
+    fe = 1;                    // fraction of profile length at end of approx
+    fs = 0.01;                 // fraction of length offset from base to avoid singularity
+    if (Rf &gt; Rb)
+    {
+      fs = (Rf*Rf-Rb*Rb)/(Ra*Ra-Rb*Rb);  // offset start to top of fillet
+    }
+    // approximate in 2 sections, split 25% along the involute
+    fm = fs+(fe-fs)/4;         // fraction of length at junction (25% along profile)
+    dedBz = involuteBezCoeffs(m, Z, phi, 3, fs, fm);
+    addBz = involuteBezCoeffs(m, Z, phi, 3, fm, fe);
+    // join the 2 sets of coeffs (skip duplicate mid point)
+    inv = dedBz.concat(addBz.slice(1));
+    //create the back profile of tooth (mirror image)
+    invR = [];                // involute profile along back of tooth
+    for (i=0; i&lt;inv.length; i++)
+    {
+      // rotate all points to put pitch point at y = 0
+      pt = rotate(inv[i], -baseToPitchAngle-pitchAngle/4);
+      inv[i] = pt;
+      // generate the back of tooth profile nodes, mirror coords in X axis
+      invR[i] = {x:pt.x, y:-pt.y};
+    }
+    // ****** calculate section junction points R=back of tooth, Next=front of next tooth)
+    fillet = toCartesian(Rf, -pitchAngle/4-pitchToFilletAngle); // top of fillet
+    filletR = {x:fillet.x, y:-fillet.y};   // flip to make same point on back of tooth
+    rootR = toCartesian(Rroot, pitchAngle/4+pitchToFilletAngle+filletAngle);
+    rootNext = toCartesian(Rroot, 3*pitchAngle/4-pitchToFilletAngle-filletAngle);
+    filletNext = rotate(fillet, pitchAngle);  // top of fillet, front of next tooth
+    // ****** create the drawing command data array for the tooth
+    data = [];
+    data.push("M", fillet.x, fillet.y);           // start at top of fillet
+    if (Rf &lt; Rb)
+    {
+      data.push("L", inv[0].x, inv[0].y);         // line from fillet up to base circle
+    }
+    data.push("C", inv[1].x, inv[1].y, inv[2].x, inv[2].y, inv[3].x, inv[3].y,
+                   inv[4].x, inv[4].y, inv[5].x, inv[5].y, inv[6].x, inv[6].y);
+    data.push("A", Ra, Ra, 0, 0, 1, invR[6].x, invR[6].y); // arc across addendum circle, sweep 1 for RHC, 0 for SVG
+    data.push("C", invR[5].x, invR[5].y, invR[4].x, invR[4].y, invR[3].x, invR[3].y,
+                   invR[2].x, invR[2].y, invR[1].x, invR[1].y, invR[0].x, invR[0].y);
+    if (Rf &lt; Rb)
+    {
+      data.push("L", filletR.x, filletR.y);       // line down to top of fillet
+    }
+    if (rootNext.y &gt; rootR.y)    // is there a section of root circle between fillets?
+    {
+      data.push("A", fRad, fRad, 0, 0, 0, rootR.x, rootR.y); // back fillet, sweep 0 for RHC, 1 for SVG
+      data.push("A", Rroot, Rroot, 0, 0, 1, rootNext.x, rootNext.y); // root circle arc, sweep 1 for RHC, 0 for SVG
+    }
+    data.push("A", fRad, fRad, 0, 0, 0, filletNext.x, filletNext.y); // sweep 0 for RHC, 1 for SVG
+
+    return data;  // return an array of Cango (SVG) format draw commands
+  };
+
+  /*----------------------------------------------------------
+    createIntGearTooth
+    Create an array of drawing commands and their coordinates
+    to draw a single internal (ring)gear tooth based on a
+    circle involute using the metric gear standards.
+
+    Requires Cango graphics library Rev 2.08 or later
+   ----------------------------------------------------------*/
+  createIntGearTooth = function(module, teeth, pressureAngle)
+  {
+    // ****** gear specifications
+    var m = module,                               // Module = mm of pitch diameter per tooth
+        Z = teeth,                                // Number of teeth
+        phi = pressureAngle || 20,                // pressure angle (degrees)
+        addendum = 0.6*m,                         // pitch circle to tip circle (ref G.M.Maitra)
+        dedendum = 1.25*m,                        // pitch circle to root radius, sets clearance
+        // Calculate radii
+        Rpitch = Z*m/2,                           // pitch radius
+        Rb = Rpitch*Math.cos(phi*Math.PI/180),    // base radius
+        Ra = Rpitch - addendum,                   // addendum radius
+        Rroot = Rpitch + dedendum,                // root radius
+        clearance = 0.25*m,                       // gear dedendum - pinion addendum
+        Rf = Rroot - clearance,                   // radius of top of fillet (end of profile)
+        fRad = 1.5*clearance,                     // fillet radius, 1 .. 1.5*clearance
+        pitchAngle,                               // angle between teeth (rads)
+        baseToPitchAngle,
+        tipToPitchAngle,
+        pitchToFilletAngle,
+        filletAngle,
+        fe, fs, fm,
+        addBz, dedBz,
+        inv, invR,
+        pt, i, data,
+        fillet, filletNext,
+        tip, tipR,
+        rootR, rootNext;
+
+    // ****** calculate subtended angles
+    pitchAngle = 2*Math.PI/Z;                       // angle between teeth (rads)
+    baseToPitchAngle = genInvolutePolar(Rb, Rpitch);
+    tipToPitchAngle = baseToPitchAngle;             // profile starts from base circle
+    if (Ra &gt; Rb)
+    {
+      tipToPitchAngle -= genInvolutePolar(Rb, Ra);  // start profile from addendum
+    }
+    pitchToFilletAngle = genInvolutePolar(Rb, Rf) - baseToPitchAngle;
+    filletAngle = 1.414*clearance/Rf;               // to make fillet tangential to root
+    // ****** generate Higuchi involute approximation
+    fe = 1;                   // fraction of involute length at end of approx (fillet circle)
+    fs = 0.01;                 // fraction of length offset from base to avoid singularity
+    if (Ra &gt; Rb)
+    {
+      fs = (Ra*Ra-Rb*Rb)/(Rf*Rf-Rb*Rb);    // start profile from addendum (tip circle)
+    }
+    // approximate in 2 sections, split 25% along the profile
+    fm = fs+(fe-fs)/4;        //
+    addBz = involuteBezCoeffs(m, Z, phi, 3, fs, fm);
+    dedBz = involuteBezCoeffs(m, Z, phi, 3, fm, fe);
+    // join the 2 sets of coeffs (skip duplicate mid point)
+    invR = addBz.concat(dedBz.slice(1));
+    //create the front profile of tooth (mirror image)
+    inv = [];         // back involute profile
+    for (i=0; i&lt;invR.length; i++)
+    {
+      // rotate involute to put center of tooth at y = 0
+      pt = rotate(invR[i], pitchAngle/4-baseToPitchAngle);
+      invR[i] = pt;
+      // generate the back of tooth profile, flip Y coords
+      inv[i] = {x:pt.x, y:-pt.y};
+    }
+    // ****** calculate coords of section junctions
+    fillet = {x:inv[6].x, y:inv[6].y};    // top of fillet, front of tooth
+    tip = toCartesian(Ra, -pitchAngle/4+tipToPitchAngle);  // tip, front of tooth
+    tipR = {x:tip.x, y:-tip.y};  // addendum, back of tooth
+    rootR = toCartesian(Rroot, pitchAngle/4+pitchToFilletAngle+filletAngle);
+    rootNext = toCartesian(Rroot, 3*pitchAngle/4-pitchToFilletAngle-filletAngle);
+    filletNext = rotate(fillet, pitchAngle);  // top of fillet, front of next tooth
+    // ****** create the drawing command data array for the tooth
+    data = [];
+    data.push("M", inv[6].x, inv[6].y);  // start at top of front profile
+    data.push("C", inv[5].x, inv[5].y, inv[4].x, inv[4].y, inv[3].x, inv[3].y,
+                   inv[2].x, inv[2].y, inv[1].x, inv[1].y, inv[0].x, inv[0].y);
+    if (Ra &lt; Rb)
+    {
+      data.push("L", tip.x, tip.y);  // line from end of involute to addendum (tip)
+    }
+    data.push("A", Ra, Ra, 0, 0, 1, tipR.x, tipR.y); // arc across tip circle, sweep 1 for RHC, 0 for SVG
+    if (Ra &lt; Rb)
+    {
+      data.push("L", invR[0].x, invR[0].y);  // line from addendum to start of involute
+    }
+    data.push("C", invR[1].x, invR[1].y, invR[2].x, invR[2].y, invR[3].x, invR[3].y,
+                   invR[4].x, invR[4].y, invR[5].x, invR[5].y, invR[6].x, invR[6].y);
+    if (rootR.y &lt; rootNext.y)    // there is a section of root circle between fillets
+    {
+      data.push("A", fRad, fRad, 0, 0, 1, rootR.x, rootR.y); // fillet on back of tooth, sweep 1 for RHC, 0 for SVG
+      data.push("A", Rroot, Rroot, 0, 0, 1, rootNext.x, rootNext.y); // root circle arc, sweep 1 for RHC, 0 for SVG
+    }
+    data.push("A", fRad, fRad, 0, 0, 1, filletNext.x, filletNext.y); // fillet on next, sweep 1 for RHC, 0 for SVG 
+
+    return data;  // return an array of Cango (SVG) format draw commands
+  };
+
+}());</t>
+<t tx="amd.20151124210158.1"># 直接送出 html 版本
+@app.route("/drawcango")
+def drawcango():
+    outstring = '''
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
+&lt;script type="text/javascript" src="/static/Cango-7v13.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="/static/Cango2D-6v13.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="/static/Brython3.2.3-20151122-082712/brython.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body onload="brython({debug:1, cache:'version'})"&gt;
+&lt;canvas id="plotarea" width="800" height="800"&gt;&lt;/canvas&gt;
+&lt;script type="text/python"&gt;
+from javascript import JSConstructor
+from browser import window
+import math
+
+cango = JSConstructor(window.Cango)
+cgo = cango("plotarea")
+cgo.setGridboxRHC()
+cgo.setWorldCoords(-1, -25, 2, 50) 
+cgo.drawText("使用 Cango 繪圖程式庫!", 0, 0, {"fontSize":60, "fontWeight": 1200, "lorg":5 })
+
+# Cango2D example
+cango2d = JSConstructor(window.Cango2D)
+tweener = JSConstructor(window.Tweener)
+g = cango2d("plotarea")
+g.setWorldCoords(-10, -10, 20)
+hello = g.drawText("加油!加油!", 0, 0, {
+"fillColor":"blue",
+"fontSize":16,
+"lorg":5 })
+sclTwn = tweener([1, 2, 1], 1000, 5000, 'loopAll')
+rotTwn = tweener([0, 360, -360], 1000, 5000, 'loopAll')
+hello.transform.scale(sclTwn)
+hello.transform.rotate(rotTwn)
+g.animate(hello)
+g.playAnimation()
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+'''
+    return outstring
+</t>
+<t tx="amd.20151124215720.1"># 直接送出 html 版本
+@app.route("/drag")
+def drag():
+    outstring = '''
+&lt;!DOCTYPE html&gt; 
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="content-type" content="text/html;charset=utf-8"&gt;
+&lt;script type="text/javascript" src="/static/Cango2D-6v13.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="/static/Brython3.2.3-20151122-082712/brython.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body onload="brython({debug:1, cache:'version'})"&gt;
+&lt;canvas id="plotarea" width="800" height="800"&gt;&lt;/canvas&gt;
+&lt;script type="text/python"&gt;
+from browser import window
+from javascript import JSConstructor
+  
+cango = JSConstructor(window.Cango2D)
+shapedefs = window.shapeDefs
+obj2d = JSConstructor(window.Obj2D)
+cgo = cango("plotarea")
+x1, y1 = 40, 20
+cx1, cy1 = 90, 120
+x2, y2 = 120, 100
+cx2, cy2 = 130, 20
+cx3, cy3 = 150, 120
+x3, y3 = 180, 60
+
+def dragC1(mousePos):
+    global cx1, cy1
+    cx1 = mousePos.x
+    cy1 = mousePos.y
+    drawCurve()
+ 
+def dragC2(mousePos):
+    global cx2, cy2
+    cx2 = mousePos.x
+    cy2 = mousePos.y
+    drawCurve()
+ 
+def dragC3(mousePos):
+    global cx3, cy3
+    cx3 = mousePos.x
+    cy3 = mousePos.y
+    drawCurve()
+ 
+def drawCurve():
+    # curve change shape so it must be re-draw each time
+    # draw a quadratic bezier from x1,y2 to x2,y2
+    qbez = obj2d(['M', x1, y1, 'Q', cx1, cy1, x2, y2], "PATH",  {
+          "strokeColor":'blue'})
+    cbez = obj2d(['M', x2, y2, 'C', cx2, cy2, cx3, cy3, x3, y3], "PATH",  {
+          "strokeColor":'green'})
+    # show lines to control point
+    L1 = obj2d(['M', x1, y1, 'L', cx1, cy1, x2, y2], "PATH", {
+      "strokeColor":"rgba(0, 0, 0, 0.2)",
+      "dashed":[4]})  # semi-transparent gray
+    L2 = obj2d(['M', x2, y2, 'L', cx2, cy2], "PATH", {
+      "strokeColor":"rgba(0, 0, 0, 0.2)",
+      "dashed":[4]})
+    L3 = obj2d(['M', x3, y3, 'L', cx3, cy3], "PATH", {
+      "strokeColor":"rgba(0, 0, 0, 0.2)",
+      "dashed":[4]})
+    # draw draggable control points
+    c1.transform.reset()
+    c1.transform.translate(cx1, cy1)
+    c2.transform.reset()
+    c2.transform.translate(cx2, cy2)
+    c3.transform.reset()
+    c3.transform.translate(cx3, cy3)
+    grp = cgo.createGroup2D(qbez, cbez, L1, L2, L3, c1, c2, c3)
+    cgo.renderFrame(grp)
+ 
+cgo.clearCanvas("lightyellow")
+cgo.setWorldCoords(0, 0, 200)
+ 
+# draggable control points
+c1 = obj2d(shapedefs.circle(4), "SHAPE", {"fillColor":'red'})
+c1.enableDrag(None, dragC1, None)
+c2 = c1.dup()
+c2.enableDrag(None, dragC2, None)
+c3 = c1.dup()
+c3.enableDrag(None, dragC3, None)
+drawCurve();
 &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;
