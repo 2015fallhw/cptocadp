@@ -2,7 +2,7 @@
 # genetic.py
 #
 import random
-import operator
+#import operator
 # for Intersect
 from math import *
 MAXIMIZE, MINIMIZE = 11, 22
@@ -24,6 +24,7 @@ class Individual:
     #length = 21*var_number,若接受負數參數,則必須同步修改 20->21
     length = 20*var_number
     seperator = ''
+    # 內建為最小化題目
     optimization = MINIMIZE
     def __init__(self, chromosome=None):
         self.chromosome = chromosome or self._makechromosome()
@@ -41,7 +42,7 @@ class Individual:
             self.var[i] = x
         return self.var
         ''' for -1023 ~ 1023,當設計變數可以接受負值時使用,每一變數使用21個 bit strings
-#for design variable -1023 ~1023
+        #for design variable -1023 ~1023
         for i in range(self.var_number):
             x = 0
             for j in range(i*21,i*21+10):
@@ -81,6 +82,7 @@ class Individual:
         def mate(p0, p1):
             chromosome = p0.chromosome[:] # 交配時,以p0的基因為基礎(複製整個 p0 的染色體內容
             chromosome[left:right] = p1.chromosome[left:right] # 接續上一個 p0 的染色體內容,將索引 left 至 right 的內容,替換成 p1 的基因
+            #child = p1.__class__(chromosome) 這是原先的程式,但是應該子代要指向 p0 的內容才對
             child = p0.__class__(chromosome)
             child._repair(p0, p1)
             return child
@@ -215,6 +217,16 @@ class Environment(object):
 #
 #
 #import genetic
+#此一加總函式在 Volume 最大化中,並未使用, 只用於 Onemax
+def sum(seq):
+    def add(x,y): return x+y
+    return reduce(add, seq, 0)
+class OneMax(Individual):
+    optimization = MAXIMIZE 
+    def evaluate(self, optimum=None):
+        self.score = sum(self.chromosome)
+    def mutate(self, gene):
+        self.chromosome[gene] = not self.chromosome[gene] # bit flip
 class Volume(Individual):
     optimization = MAXIMIZE
     def evaluate(self, optimum=None):
@@ -265,8 +277,10 @@ class Intersect(Individual):
     def mutate(self, gene):
         self.chromosome[gene] = not self.chromosome[gene] # bit flip
         
+        
 
 if __name__ == "__main__":
+    #env = Environment(OneMax, maxgenerations=1000, optimum=30)
     #env = Environment(Volume, size=500, maxgenerations=100)
     env = Environment(Intersect, size=500, maxgenerations=100)
     env.run()
